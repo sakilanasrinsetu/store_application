@@ -24,23 +24,23 @@ class StoreViewSet(CustomViewSet):
         DjangoFilterBackend,
         StoreOrdering,
     )
-    # filterset_class = StoreFilter
+    filterset_class = StoreFilter
 
-    filterset_fields = (
-        "name",
-        "slug",
-        "type",
-        "address",
-        "primary_phone",
-        "secondary_phone",
-        "map_link",
-        "opening_time",
-        "closing_time",
-        "shown_in_website",
-        "is_active",
-        "created_at",
-        "updated_at",
-    )
+    # filterset_fields = (
+    #     "name",
+    #     "slug",
+    #     "type",
+    #     "address",
+    #     "primary_phone",
+    #     "secondary_phone",
+    #     "map_link",
+    #     "opening_time",
+    #     "closing_time",
+    #     "shown_in_website",
+    #     "is_active",
+    #     "created_at",
+    #     "updated_at",
+    # )
 
     def list(self, request, *args, **kwargs):
         qs = self.filter_queryset(self.get_queryset())

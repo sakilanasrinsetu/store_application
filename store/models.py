@@ -28,8 +28,8 @@ class Store(models.Model):
     opening_time = models.TimeField()
     closing_time = models.TimeField()
     shown_in_website = models.BooleanField(default=True)
-    off_days = ArrayField(models.CharField(choices=OFF_DAYS, max_length=50), 
-                          blank=True, default=list)
+    # off_days = ArrayField(models.CharField(choices=OFF_DAYS, max_length=50),
+    #                       blank=True, default=list)
 
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

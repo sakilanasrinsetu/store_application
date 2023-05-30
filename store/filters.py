@@ -7,6 +7,7 @@ from .models import Store
 
 class StoreFilter(FilterSet):
     search_term = django_filters.CharFilter(label="search_term", method="filter_search_term")
+    name = django_filters.CharFilter(label="name", method="filter_search_term")
 
     class Meta:
         model = Store
@@ -15,6 +16,7 @@ class StoreFilter(FilterSet):
         )
 
     def filter_search_term(self, objects, name, value):
+        a ='fvfvdfvn'
         if value:
             queryset = Store.objects.filter(
                 name__icontains=value
