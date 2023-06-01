@@ -45,8 +45,7 @@ THIRD_PARTY_LIBRARY_APPS = [
     # Apps
     'store',
     'store_application',
-
-
+    'actstream',
 ]
 
 # Application definition

@@ -10,6 +10,12 @@ from store.orderings import StoreOrdering
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, serializers, filters
 
+from actstream import action
+from actstream.models import Action
+
+import requests
+
+
 
 # Create your views here.
 
@@ -67,6 +73,20 @@ class StoreViewSet(CustomViewSet):
                 )
             
             qs = serializer.save()
+
+            if qs:
+                public_ip = None
+                response = requests.get('https://api.ipify.org?format=json')
+                if response.status_code == 200:
+                    data = response.json()
+                    public_ip = data['ip']
+                    
+                action.send(qs, verb=f"{public_ip}", action_object=qs, target=qs, description=f"Method: {request.method} URL-{request.build_absolute_uri()} \n\n Request Body is- \n {request.data} \n\n Response Body is- {serializer.data} \n\n Request from {public_ip}", url=request.path)
+
+                # action.send(qs, verb=qs.name,
+                #         action_object=qs, target=qs.slug, request_body=request.data, url=request.path)
+
+
             return ResponseWrapper(data=serializer.data, msg='created')
         else:
             return ResponseWrapper(error_msg=serializer.errors, error_code=400)
@@ -78,6 +98,16 @@ class StoreViewSet(CustomViewSet):
                 error_code=404, 
                 error_msg="Store Not Found")
         serializer = self.serializer_class(qs)
+
+        if qs:
+            public_ip = None
+            response = requests.get('https://api.ipify.org?format=json')
+            if response.status_code == 200:
+                data = response.json()
+                public_ip = data['ip']
+                
+            action.send(qs, verb=f"{public_ip}", action_object=qs, target=qs, description=f"Method: {request.method} URL-{request.build_absolute_uri()} \n\n Request Body is- \n {request.data} \n\n Response Body is- {serializer.data} \n\n Request from {public_ip}", url=request.path)
+            
         return ResponseWrapper(data=serializer.data,
                                msg="Success")
     
