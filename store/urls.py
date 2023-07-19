@@ -10,4 +10,7 @@ urlpatterns = [
          StoreViewSet.as_view({'patch': 'partial_update',
                                'put': 'update', 'get': 'retrieve',
                               'delete':'destroy'}, name='stores')),
+    path('report/',
+         OrderViewSet.as_view({'get': 'list'},
+                             name='report')),
 ]

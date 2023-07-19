@@ -39,6 +39,21 @@ class Store(models.Model):
         return self.name
 
 
+class Order(models.Model):
+    invoice_no = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.invoice_no
+    
+class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Order,on_delete=models.SET_NULL, 
+        null=True,blank=True)
+    selling_price = models.FloatField(default=0.0)
+
+    def __str__(self):
+        return self.order.invoice_no
+
 # ..........***.......... Book Category ..........***..........
 
 

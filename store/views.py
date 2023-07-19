@@ -2,7 +2,7 @@ from django.shortcuts import render
 from utils.custom_viewset import CustomViewSet
 
 from .serializers import StoreSerializer
-from store.models import Store
+from store.models import Store, Order, OrderItem
 from utils.response_wrapper import ResponseWrapper
 from utils.custom_pagination import CustomPagination
 from store.filters import StoreFilter
@@ -31,22 +31,6 @@ class StoreViewSet(CustomViewSet):
         StoreOrdering,
     )
     filterset_class = StoreFilter
-
-    # filterset_fields = (
-    #     "name",
-    #     "slug",
-    #     "type",
-    #     "address",
-    #     "primary_phone",
-    #     "secondary_phone",
-    #     "map_link",
-    #     "opening_time",
-    #     "closing_time",
-    #     "shown_in_website",
-    #     "is_active",
-    #     "created_at",
-    #     "updated_at",
-    # )
 
     def list(self, request, *args, **kwargs):
         qs = self.filter_queryset(self.get_queryset())
@@ -177,3 +161,37 @@ class StoreViewSet(CustomViewSet):
 
         qs.delete()
         return ResponseWrapper(status=200, msg='deleted')
+    
+
+
+
+class OrderViewSet(CustomViewSet):
+    queryset = Order.objects.all()
+    serializer_class = None
+    lookup_field = store_id = 'pk'
+    pagination_class = CustomPagination
+
+    filter_backends = (
+        DjangoFilterBackend,
+        StoreOrdering,
+    )
+    filterset_class = None
+
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+
+        total_selling_price = 0.0
+
+        total_selling_price = sum(qs.values_list('orderitem__selling_price', flat=True))
+        
+        # serializer_class = self.get_serializer_class()
+        # # ....***.... Pagination ....***....
+        # page_qs = self.paginate_queryset(qs)
+        # serializer = serializer_class(instance=page_qs, many=True)
+        # paginated_data = self.get_paginated_response(serializer.data)
+
+        context = {
+            'total_selling_price':total_selling_price
+        }
+
+        return ResponseWrapper(data=context, msg='Success')
